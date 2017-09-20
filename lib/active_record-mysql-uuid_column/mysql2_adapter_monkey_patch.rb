@@ -1,6 +1,6 @@
 module ActiveRecord
   module ConnectionAdapters
-    class Mysql2Adapter
+    class Mysql2SpatialAdapter
       private
 
       def _quote(value)
