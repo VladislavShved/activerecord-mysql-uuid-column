@@ -68,6 +68,10 @@ module ActiveRecord
           @storage_format
         end
 
+        def unpack(option)
+          self.to_s.unpack(option)
+        end
+
         def ==(other)
           other == to_s || super
         end
