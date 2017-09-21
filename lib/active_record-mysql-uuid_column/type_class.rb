@@ -56,11 +56,18 @@ module ActiveRecord
         end
 
         def self.from_database(value)
-          storage_format = value.unpack('H*').first.rjust(32, '0')
-          new(
-            storage_format.gsub(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '\1-\2-\3-\4-\5'),
-            storage_format
-          )
+          if value.is_a?(ActiveRecord::Type::Uuid::Data)
+            new(
+              value.to_s,
+              value.to_s.gsub('-', '')
+            )
+          else
+            storage_format = value.unpack('H*').first.rjust(32, '0')
+            new(
+              storage_format.gsub(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '\1-\2-\3-\4-\5'),
+              storage_format
+            )
+          end
         end
 
         def to_s
@@ -70,10 +77,6 @@ module ActiveRecord
 
         def hex
           @storage_format
-        end
-
-        def unpack(option)
-          self.to_s.unpack(option)
         end
 
         def ==(other)
