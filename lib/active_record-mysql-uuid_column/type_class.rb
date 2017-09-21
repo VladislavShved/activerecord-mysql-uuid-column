@@ -29,7 +29,7 @@ module ActiveRecord
 
       def assert_valid_value(value)
         case value.class
-        when value.is_a?(Data)
+        when value.is_a?(ActiveRecord::Type::Uuid::Data)
           value.to_s
         when String, ActiveSupport::ToJsonWithActiveSupportEncoder
           if value.downcase.gsub(/[^a-f0-9]/, '').size == 32
