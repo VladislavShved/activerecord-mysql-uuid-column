@@ -28,19 +28,21 @@ module ActiveRecord
       end
 
       def assert_valid_value(value)
-        case value.class
-        when value.is_a?(ActiveRecord::Type::Uuid::Data)
+        if value.is_a?(ActiveRecord::Type::Uuid::Data)
           value.to_s
-        when String, ActiveSupport::ToJsonWithActiveSupportEncoder
-          if value.downcase.gsub(/[^a-f0-9]/, '').size == 32
-            value
+        else
+          case value.class
+          when String, ActiveSupport::ToJsonWithActiveSupportEncoder
+            if value.downcase.gsub(/[^a-f0-9]/, '').size == 32
+              value
+            else
+              raise SerializationTypeMismatch,
+                "Invalid String uuid #{value}."
+            end
           else
             raise SerializationTypeMismatch,
-              "Invalid String uuid #{value}."
+              "Unsupported value object of type #{value.class}."
           end
-        else
-          raise SerializationTypeMismatch,
-            "Unsupported value object of type #{value.class}."
         end
       end
 
